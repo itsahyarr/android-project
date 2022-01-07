@@ -2,12 +2,10 @@ package com.example.infowisatajogja
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.infowisatajogja.databinding.ActivityLoginBinding
-import com.example.infowisatajogja.model.PayloadLogin
 import com.example.infowisatajogja.model.ResponseLogin
 import com.example.infowisatajogja.network.RetrofitClient
 import retrofit2.Call
@@ -80,7 +78,12 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             override fun onFailure(call: Call<ResponseLogin>, t: Throwable) {
-                Log.e("pesan error", "${t.message}")
+                binding!!.loadingBar.visibility = View.GONE
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Gagal terhubung server",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
