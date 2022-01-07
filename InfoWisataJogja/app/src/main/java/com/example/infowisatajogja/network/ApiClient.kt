@@ -1,7 +1,7 @@
 package com.example.infowisatajogja.network
 
-import android.telecom.Call
 import com.example.infowisatajogja.model.ResponseLogin
+import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST

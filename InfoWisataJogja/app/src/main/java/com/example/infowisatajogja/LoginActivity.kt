@@ -1,13 +1,18 @@
 package com.example.infowisatajogja
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.infowisatajogja.databinding.ActivityLoginBinding
 import com.example.infowisatajogja.model.ResponseLogin
 import com.example.infowisatajogja.network.RetrofitClient
-import javax.security.auth.callback.Callback
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 class LoginActivity : AppCompatActivity() {
     private var binding : ActivityLoginBinding? = null
@@ -38,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
                 }
                 else -> {
                     binding!!.loadingBar.visibility = View.VISIBLE
+                    getData()
                 }
             }
         }
@@ -47,9 +53,30 @@ class LoginActivity : AppCompatActivity() {
         val api = RetrofitClient().getInstance()
         api.login(email, pass).enqueue(object : Callback<ResponseLogin> {
             override fun onResponse(call: Call<ResponseLogin>, response: Response<ResponseLogin>) {
-                if (response.body()?.response == true) {
+                if (response.isSuccessful) {
+                    if (response.body()?.response == true) {
+                        binding!!.loadingBar.visibility = View.GONE
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        finish()
+                    } else {
+                        binding!!.loadingBar.visibility = View.GONE
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Login gagal, username/password salah",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } else {
                     binding!!.loadingBar.visibility = View.GONE
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Login gagal, terjadi kesalahan",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
+            }
+            override fun onFailure(call: Call<ResponseLogin>, t: Throwable) {
+                Log.e("pesan error", "${t.message}")
             }
         })
     }
