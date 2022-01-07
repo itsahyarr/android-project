@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.infowisatajogja.databinding.ActivityLoginBinding
+import com.example.infowisatajogja.model.PayloadLogin
 import com.example.infowisatajogja.model.ResponseLogin
 import com.example.infowisatajogja.network.RetrofitClient
 import retrofit2.Call
@@ -50,8 +51,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun getData() {
+
         val api = RetrofitClient().getInstance()
+
         api.login(email, pass).enqueue(object : Callback<ResponseLogin> {
+
             override fun onResponse(call: Call<ResponseLogin>, response: Response<ResponseLogin>) {
                 if (response.isSuccessful) {
                     if (response.body()?.response == true) {
